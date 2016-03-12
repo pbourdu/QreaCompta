@@ -26,16 +26,17 @@ QreaCompta.models = (function() {
 
   self.Journal = function(params) {
 
-    this.prototype = new BaseModel();
-
     this.journalCode = params.journalCode || null;
     this.journalLibelle = params.journalLibelle || null;
 
     this.ecritures = params.ecritures || [];
 
-    this.ini();
+    this.prototype.ini();
 
   };
+
+  self.Journal.prototype = new BaseModel;
+
 
   self.Ecriture = function(params){
 
