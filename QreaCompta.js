@@ -19,6 +19,14 @@ var QreaCompta;
             }
             WriterQuadra.prototype.toASCII = function (arg) {
                 function writeJournal(journal) {
+                    console.log("Journal.toASCII()");
+                }
+                var type = arg.constructor.name.toString();
+                switch (type) {
+                    case 'Journal':
+                        writeJournal(arg);
+                        break;
+                    default:
                 }
                 console.log(arg);
                 return arg;

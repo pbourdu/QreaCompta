@@ -18,7 +18,7 @@ module QreaCompta {
           console.log("Journal.toASCII()");
         }
 
-        var type = constructor.name.toString();
+        var type = arg.constructor.name.toString();
 
         switch(type){
           case 'Journal':
