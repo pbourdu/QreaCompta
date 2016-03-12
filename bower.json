@@ -1,10 +1,11 @@
 {
   "name": "QreaCompta",
+  "version": "0.0.1",
   "homepage": "https://github.com/pbourdu/QreaCompta",
   "authors": [
     "Pierre BOURDU <pierre.bourdu@gmail.com>"
   ],
-  "description": "",
+  "description": "Librairie permettant la modélisation d'une comptabilité en javascript.",
   "main": "QreaCompta.js",
   "moduleType": [],
   "license": "MIT",
