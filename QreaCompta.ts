@@ -15,11 +15,22 @@ module QreaCompta {
       toASCII<T>(arg: T): T{
 
         function writeJournal(journal){
+          console.log("Journal.toASCII()");
+        }
 
+        var type = constructor.name.toString();
+
+        switch(type){
+          case 'Journal':
+            writeJournal(arg);
+            break;
+          default:
         }
 
         console.log(arg);
+
         return arg;
+
       }
 
     }
