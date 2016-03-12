@@ -16,20 +16,19 @@ module QreaCompta {
 
         function writeJournal(journal){
           console.log("Journal.toASCII()");
+          var file = "ligne1\r\nligne2";
+          return file;
         }
 
         var type = arg.constructor.name.toString();
 
         switch(type){
           case 'Journal':
-            writeJournal(arg);
+            return writeJournal(arg);
             break;
           default:
+            return null;
         }
-
-        console.log(arg);
-
-        return arg;
 
       }
 
