@@ -1,66 +1,29 @@
-var QreaCompta = (function() {
-
-  var self = {};
-
-  /*
-  self.init = function(){
-
-  };
-  */
-
-  return self;
-
-})();
-
-QreaCompta.models = (function() {
-
-  var self = {};
-
-  var BaseModel = function(params){
-
-    this.prototype.ini = function(){
-      console.log('ini du model');
-    };
-
-  };
-
-  self.Journal = function(params) {
-
-    this.journalCode = params.journalCode || null;
-    this.journalLibelle = params.journalLibelle || null;
-
-    this.ecritures = params.ecritures || [];
-
-    this.prototype.ini();
-
-  };
-
-  self.Journal.prototype = new BaseModel;
-
-
-  self.Ecriture = function(params){
-
-    this.dateLet = params.dateLet || null;
-    this.ecritureDate = params.ecritureDate || null;
-    this.ecritureLet = params.ecritureLet || null;
-    this.ecritureLib = params.ecritureLib || null;
-    this.pieceDate = params.pieceDate || null;
-    this.pieceRef = params.pieceRef || null;
-    this.validDate = params.validDate || null;
-
-    this.lignes = params.lignes || [];
-
-  };
-
-  self.Ligne = function(params){
-
-    this.compteLib = params.compteLib || null;
-    this.compteNum = params.compteNum || null;
-    this.credit = params.credit || null;
-    this.debit = params.devit || null;
-
-  };
-
-  return self;
-
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var QreaCompta;
+(function (QreaCompta) {
+    var BaseModel = (function () {
+        function BaseModel() {
+        }
+        BaseModel.prototype.ini = function () {
+            console.log('ini BaseModel');
+        };
+        return BaseModel;
+    }());
+    ;
+    var Journal = (function (_super) {
+        __extends(Journal, _super);
+        function Journal(params) {
+            _super.call(this);
+            this.journalCode = params.journalCode || null;
+            this.journalLibelle = params.journalLibelle || null;
+            // this.ecritures = params.ecritures || [];
+        }
+        return Journal;
+    }(BaseModel));
+    QreaCompta.Journal = Journal;
+    ;
+})(QreaCompta || (QreaCompta = {}));
