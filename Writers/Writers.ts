@@ -154,13 +154,14 @@ module QreaCompta {
 
                 // passage en centimes
                 v *= 100;
+                v = Math.round(v);
 
                 // mise sur la longeur quadra 42 signes pour le montant
                 var resValue = v.toString();
                 if (resValue.length > 42) {
                   throw new Error('Valeur trop grande');
                 } else if (resValue.length < 42) {
-                  for (var i; i < 42; i++) {
+                  for (var i = resValue.length; i < 42; i++) {
                     resValue = '0' + resValue;
                   }
                 }
