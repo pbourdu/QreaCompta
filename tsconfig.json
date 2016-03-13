@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
-        "out": "built/QreaCompta.js"
+        "out": "QreaCompta.js",
+        "target": "ES5"
     }
 }
