@@ -27,6 +27,14 @@ var QreaCompta;
                 this.journalLibelle = params.journalLibelle || null;
                 this.ecritures = params.ecritures || [];
             }
+            Journal.prototype.addEcriture = function (e) {
+                if (!e.equilibre) {
+                    throw new Error('L\'écriture n\'est pas équilibrée');
+                }
+                else {
+                    this.ecritures.push(e);
+                }
+            };
             Journal.prototype.checkEquilibre = function () {
                 if (!this.ecritures || this.ecritures.length === 0) {
                     return true;
@@ -66,8 +74,11 @@ var QreaCompta;
                 this.pieceRef = params.pieceRef || null;
                 this.pieceDate = params.pieceDate || null;
                 this.validDate = params.validDate || null;
-                this.lignes = params.lignes || null;
+                this.lignes = params.lignes || [];
             }
+            Ecriture.prototype.addLigne = function (l) {
+                this.lignes.push(l);
+            };
             Ecriture.prototype.checkEquilibre = function () {
                 if (this.lignes.length < 1) {
                     return true;
@@ -143,7 +154,7 @@ var QreaCompta;
                         // params nécessaire pour l'écriture d'un ligne type M
                         var params = {
                             numeroCompte: null,
-                            journalCode: journal.journalCode,
+                            journalCode: journal.journalCode || 'VE',
                             date: ecriture.ecritureDate,
                             libelle: ecriture.ecritureLib,
                             sens: null,

@@ -27,6 +27,14 @@ module QreaCompta {
 
       }
 
+      addEcriture(e: Ecriture){
+        if(!e.equilibre){
+          throw new Error('L\'écriture n\'est pas équilibrée');
+        } else {
+          this.ecritures.push(e);          
+        }
+      }
+
       private checkEquilibre(){
 
         if(!this.ecritures || this.ecritures.length === 0){
@@ -70,8 +78,12 @@ module QreaCompta {
         this.pieceRef = params.pieceRef || null;
         this.pieceDate = params.pieceDate || null;
         this.validDate = params.validDate || null;
-        this.lignes = params.lignes || null;
+        this.lignes = params.lignes || [];
 
+      }
+
+      addLigne(l: Ligne){
+        this.lignes.push(l);
       }
 
       private checkEquilibre(){
