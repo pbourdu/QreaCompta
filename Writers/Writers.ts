@@ -54,6 +54,12 @@ module QreaCompta {
               if(l.debit > 0){
                 params.sens = 'D';
                 params.montant = l.debit;
+              } else if(l.credit < 0){
+                params.sens = 'D';
+                params.montant = -1 * l.credit;
+              } else if(l.debit < 0) {
+                params.sens = 'C';
+                params.montant = -1 * l.debit;
               } else {
                 params.sens = 'C';
                 params.montant = l.credit;
