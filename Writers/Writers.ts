@@ -98,6 +98,8 @@ module QreaCompta {
                */
               function convertDate(d) {
 
+                d = new Date(d);
+
                 var dd = d.getDate().toString();
                 if (dd.length === 1) dd = '0' + dd;
                 var mm = d.getMonth().toString();
