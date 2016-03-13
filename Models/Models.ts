@@ -27,11 +27,11 @@ module QreaCompta {
 
       }
 
-      addEcriture(e: Ecriture){
+      public addEcriture(e: Ecriture){
         if(!e.equilibre){
           throw new Error('L\'écriture n\'est pas équilibrée');
         } else {
-          this.ecritures.push(e);          
+          this.ecritures.push(e);
         }
       }
 
@@ -82,7 +82,7 @@ module QreaCompta {
 
       }
 
-      addLigne(l: Ligne){
+      public addLigne(l: Ligne){
         this.lignes.push(l);
       }
 
