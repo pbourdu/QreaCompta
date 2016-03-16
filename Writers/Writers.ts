@@ -54,6 +54,12 @@ module QreaCompta {
               if(l.debit > 0){
                 params.sens = 'D';
                 params.montant = l.debit;
+              } else if(l.credit < 0){
+                params.sens = 'D';
+                params.montant = -1 * l.credit;
+              } else if(l.debit < 0) {
+                params.sens = 'C';
+                params.montant = -1 * l.debit;
               } else {
                 params.sens = 'C';
                 params.montant = l.credit;
@@ -97,6 +103,8 @@ module QreaCompta {
                * @return {string}   la date au format DDMMYY
                */
               function convertDate(d) {
+
+                d = new Date(d);
 
                 var dd = d.getDate().toString();
                 if (dd.length === 1) dd = '0' + dd;
@@ -152,15 +160,22 @@ module QreaCompta {
 
                 // passage en centimes
                 v *= 100;
+                v = Math.round(v);
 
                 // mise sur la longeur quadra 12 signes pour le montant
                 var resValue = v.toString();
-                if (resValue.length >= 12) {
+
+                if (resValue.length > 12) {
+
                   throw new Error('Valeur trop grande');
-                } else  {
+
+                } else if(resValue.length < 12 ) {
+
                   for (var i; i < 12; i++) {
                     resValue = '0' + resValue;
+
                   }
+
                 }
 
                 // fin on retourne

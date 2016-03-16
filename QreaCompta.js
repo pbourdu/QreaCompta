@@ -27,6 +27,14 @@ var QreaCompta;
                 this.journalLibelle = params.journalLibelle || null;
                 this.ecritures = params.ecritures || [];
             }
+            Journal.prototype.addEcriture = function (e) {
+                if (!e.equilibre) {
+                    throw new Error('L\'écriture n\'est pas équilibrée');
+                }
+                else {
+                    this.ecritures.push(e);
+                }
+            };
             Journal.prototype.checkEquilibre = function () {
                 if (!this.ecritures || this.ecritures.length === 0) {
                     return true;
@@ -66,8 +74,11 @@ var QreaCompta;
                 this.pieceRef = params.pieceRef || null;
                 this.pieceDate = params.pieceDate || null;
                 this.validDate = params.validDate || null;
-                this.lignes = params.lignes || null;
+                this.lignes = params.lignes || [];
             }
+            Ecriture.prototype.addLigne = function (l) {
+                this.lignes.push(l);
+            };
             Ecriture.prototype.checkEquilibre = function () {
                 if (this.lignes.length < 1) {
                     return true;
@@ -157,6 +168,14 @@ var QreaCompta;
                                 params.sens = 'D';
                                 params.montant = l.debit;
                             }
+                            else if (l.credit < 0) {
+                                params.sens = 'D';
+                                params.montant = -1 * l.credit;
+                            }
+                            else if (l.debit < 0) {
+                                params.sens = 'C';
+                                params.montant = -1 * l.debit;
+                            }
                             else {
                                 params.sens = 'C';
                                 params.montant = l.credit;
@@ -191,6 +210,7 @@ var QreaCompta;
                              * @return {string}   la date au format DDMMYY
                              */
                             function convertDate(d) {
+                                d = new Date(d);
                                 var dd = d.getDate().toString();
                                 if (dd.length === 1)
                                     dd = '0' + dd;
@@ -242,12 +262,13 @@ var QreaCompta;
                                 }
                                 // passage en centimes
                                 v *= 100;
+                                v = Math.round(v);
                                 // mise sur la longeur quadra 12 signes pour le montant
                                 var resValue = v.toString();
-                                if (resValue.length >= 12) {
+                                if (resValue.length > 12) {
                                     throw new Error('Valeur trop grande');
                                 }
-                                else {
+                                else if (resValue.length < 12) {
                                     for (var i; i < 12; i++) {
                                         resValue = '0' + resValue;
                                     }
