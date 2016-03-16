@@ -143,7 +143,7 @@ var QreaCompta;
                         // params nécessaire pour l'écriture d'un ligne type M
                         var params = {
                             numeroCompte: null,
-                            journalCode: journal.journalCode,
+                            journalCode: journal.journalCode || 'VE',
                             date: ecriture.ecritureDate,
                             libelle: ecriture.ecritureLib,
                             sens: null,
@@ -227,10 +227,10 @@ var QreaCompta;
                             }
                             /**
                              * convertToCentimesSigne - Convertir un montant en centimes signé
-                             * sur 43 caractères
+                             * sur 13 caractères
                              *
                              * @param  {nmuber} v: number valeur à convertir
-                             * @return {string}           valeur sur 43 caractères en centimes signé
+                             * @return {string}           valeur sur 13 caractères en centimes signé
                              */
                             function convertToCentimesSigne(v) {
                                 // par défaut valeur > 0
@@ -242,13 +242,13 @@ var QreaCompta;
                                 }
                                 // passage en centimes
                                 v *= 100;
-                                // mise sur la longeur quadra 42 signes pour le montant
+                                // mise sur la longeur quadra 12 signes pour le montant
                                 var resValue = v.toString();
-                                if (resValue.length > 42) {
+                                if (resValue.length >= 12) {
                                     throw new Error('Valeur trop grande');
                                 }
-                                else if (resValue.length < 42) {
-                                    for (var i; i < 42; i++) {
+                                else {
+                                    for (var i; i < 12; i++) {
                                         resValue = '0' + resValue;
                                     }
                                 }
