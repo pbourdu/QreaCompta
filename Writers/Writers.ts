@@ -171,7 +171,7 @@ module QreaCompta {
 
                 } else if(resValue.length < 12 ) {
 
-                  for (var i; i < 12; i++) {
+                  for (var i = resValue.length; i < 12; i++) {
                     resValue = '0' + resValue;
 
                   }
