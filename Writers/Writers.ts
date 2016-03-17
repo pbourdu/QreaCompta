@@ -7,29 +7,198 @@ module QreaCompta {
 
     class BaseWriter {
       constructor() { }
+
+      private convertToLength(t: string, l: number) {
+        if (t.length > l) {
+          // on doit prendre uniquement les l caractères
+          return t.substr(0, l);
+        } else if (t.length < l) {
+          for (var i = t.length; i < l; i++) {
+            t += ' ';
+          }
+          return t;
+        } else {
+          return t;
+        }
+      }
+
+      private convertDate(d) {
+
+        d = new Date(d);
+
+        var dd = d.getDate().toString();
+        if (dd.length === 1) dd = '0' + dd;
+        var mm = d.getMonth().toString();
+        if (mm.length === 1) mm = '0' + mm;
+        var yyyy = d.getFullYear().toString();
+        yyyy = yyyy.substr(2, 2);
+
+        var res = dd + mm + yyyy;
+        return res;
+
+      }
+
+      private getSens(l: QreaCompta.Models.Ligne, o: any) {
+
+        var params = o || {};
+
+        if (l.debit > 0) {
+          params.sens = 'D';
+          params.montant = l.debit;
+        } else if (l.credit < 0) {
+          params.sens = 'D';
+          params.montant = -1 * l.credit;
+        } else if (l.debit < 0) {
+          params.sens = 'C';
+          params.montant = -1 * l.debit;
+        } else {
+          params.sens = 'C';
+          params.montant = l.credit;
+        }
+
+        return params;
+
+      }
+
+    }
+
+    export class WriterSage extends BaseWriter {
+
+      constructor() {
+        super();
+      }
+
+      public toPNM<T>(arg: T): T {
+
+        var type = arg.constructor.name.toString();
+
+        switch (type) {
+          case 'Journal':
+            return writeJournal(arg);
+          default:
+            return null;
+        }
+
+        function writeJournal(journal: QreaCompta.Models.Journal) {
+
+          var res = '';
+          res += writeLigneEnteteSociete();
+
+          journal.ecritures.forEach(function(e) {
+            res += writeEcriture(e);
+          }, this);
+
+          function writeLigneEnteteSociete() {
+
+            var res = 'entreprise ???\r\n';
+            return res;
+
+          }
+
+          function writeEcriture(ecriture: QreaCompta.Models.Ecriture) {
+
+            var resEcriture = '';
+
+            // params nécessaire pour l'écriture d'un ligne type M
+            var params = {
+              numeroCompte: null,
+              journalCode: this.convertToLength(journal.journalCode, 3) || 'VE ',
+              date: this.convertDate(ecriture.ecritureDate),
+              libelle: ecriture.ecritureLib,
+              sens: null,
+              montant: null,
+              pieceRef: ecriture.pieceRef
+            }
+
+            ecriture.lignes.forEach(function(l) {
+              resEcriture += writeLigne(l);
+            }, this);
+
+            return resEcriture;
+
+            function writeLigne(ligne: QreaCompta.Models.Ligne) {
+
+              function convertToMontantSage(v: number) {
+
+                // mise sur la longeur quadra 12 signes pour le montant
+                var resValue = v.toString();
+
+                if (resValue.length > 20) {
+
+                  throw new Error('Valeur trop grande');
+
+                } else if (resValue.length < 20) {
+
+                  for (var i = resValue.length; i < 20; i++) {
+                    resValue = ' ' + resValue;
+
+                  }
+
+                }
+
+                var resLigne = '';
+                // code jouranl pos 1 long 3
+                resLigne += params.journalCode;
+                // date pièce pos 4 long 6 JJMMAA
+                resLigne += this.convertDate(params.date);
+                // type de pièce pos 10 long 2
+                resLigne += this.convertToLength('', 2);
+                // compte general pos 12 long 13
+                resLigne += this.convertToLength(ligne.compteNum, 13);
+                // type de compte pos 25 long
+                resLigne += this.convertToLength('', 1);
+                // libelle de l'écriture pos 52 long 25
+                resLigne += this.convertToLength(params.libelle, 25);
+                // mode de paiement pos 77 long 1
+                resLigne += ' ';
+                // date de l'échéance pos 78 long 6
+                resLigne += this.convertToLength('', 6);
+
+                var paramsMontant = this.getSens(ligne);
+
+                // sens pos 84 long 1
+                resLigne += paramsMontant.sens;
+                // type écriture pos 105 long 1
+                resLigne += convertToMontantSage(paramsMontant.montant);
+
+                // numero de pièce pos 106 long 7
+                resLigne += this.convertToLength(params.pieceRef, 7);
+
+                resLigne += 'N';
+
+                return resLigne;
+
+              }
+
+            }
+
+          }
+
+        }
+      }
     }
 
     export class WriterCSV extends BaseWriter {
 
-      constructor(){
+      constructor() {
         super();
       }
 
       public toCSV<T>(arg: T): T {
 
-        function writeJournal(journal: QreaCompta.Models.Journal){
+        function writeJournal(journal: QreaCompta.Models.Journal) {
 
           // ON ECRIT LES ENTETES DU CSV DANS LA PREMIERE LIGNE
           var res = 'ecritureDate;compteNum;ecritureLibelle;debit;credit;pieceRef\r\n';
 
           // pour chaque écriture
-          journal.ecritures.forEach(function(e){
+          journal.ecritures.forEach(function(e) {
             res += writeEcriture(e);
           }, this);
 
           return res;
 
-          function writeEcriture(ecriture: QreaCompta.Models.Ecriture){
+          function writeEcriture(ecriture: QreaCompta.Models.Ecriture) {
 
             function convertDate(d) {
 
@@ -41,7 +210,7 @@ module QreaCompta {
               if (mm.length === 1) mm = '0' + mm;
               var yyyy = d.getFullYear().toString();
 
-              var res = dd + '/'+ mm + '/' + yyyy;
+              var res = dd + '/' + mm + '/' + yyyy;
               return res;
 
             }
@@ -58,17 +227,17 @@ module QreaCompta {
               pieceRef: ecriture.pieceRef
             }
 
-            ecriture.lignes.forEach(function(l: QreaCompta.Models.Ligne){
+            ecriture.lignes.forEach(function(l: QreaCompta.Models.Ligne) {
               resEcriture += writeLigne(l);
             }, this);
 
             return resEcriture;
 
-            function writeLigne(l: QreaCompta.Models.Ligne){
+            function writeLigne(l: QreaCompta.Models.Ligne) {
 
-              function convertMontantToStringCSV(montant){
+              function convertMontantToStringCSV(montant) {
 
-                if(montant){
+                if (montant) {
                   var res = montant.toString();
                   return res.replace(".", ",");
                 } else {
@@ -78,7 +247,7 @@ module QreaCompta {
               }
 
               params.numeroCompte = l.compteNum;
-              params.debit =  convertMontantToStringCSV(l.debit),
+              params.debit = convertMontantToStringCSV(l.debit),
               params.credit = convertMontantToStringCSV(l.credit);
 
               // ecriture
@@ -120,11 +289,11 @@ module QreaCompta {
 
       public toASCII<T>(arg: T): T {
 
-        function writeJournal(journal: QreaCompta.Models.Journal){
+        function writeJournal(journal: QreaCompta.Models.Journal) {
 
           var file = '';
 
-          journal.ecritures.forEach(function(e: QreaCompta.Models.Ecriture){
+          journal.ecritures.forEach(function(e: QreaCompta.Models.Ecriture) {
             file += writeEcriture(e);
           }, this);
 
@@ -132,7 +301,7 @@ module QreaCompta {
 
           function writeEcriture(ecriture: QreaCompta.Models.Ecriture) {
 
-            if(!ecriture.equilibre){
+            if (!ecriture.equilibre) {
               throw new Error('L\'écriture n\'est pas équilibrée');
             }
 
@@ -151,22 +320,11 @@ module QreaCompta {
             }
 
             // on parcours chaque ligne
-            ecriture.lignes.forEach(function(l: QreaCompta.Models.Ligne){
+            ecriture.lignes.forEach(function(l: QreaCompta.Models.Ligne) {
 
               params.numeroCompte = l.compteNum;
-              if(l.debit > 0){
-                params.sens = 'D';
-                params.montant = l.debit;
-              } else if(l.credit < 0){
-                params.sens = 'D';
-                params.montant = -1 * l.credit;
-              } else if(l.debit < 0) {
-                params.sens = 'C';
-                params.montant = -1 * l.debit;
-              } else {
-                params.sens = 'C';
-                params.montant = l.credit;
-              }
+
+              params = this.getSens(l, params);
 
               res += writeLineM(params);
               res += '\r\n';
@@ -272,7 +430,7 @@ module QreaCompta {
 
                   throw new Error('Valeur trop grande');
 
-                } else if(resValue.length < 12 ) {
+                } else if (resValue.length < 12) {
 
                   for (var i = resValue.length; i < 12; i++) {
                     resValue = '0' + resValue;

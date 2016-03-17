@@ -142,8 +142,141 @@ var QreaCompta;
         var BaseWriter = (function () {
             function BaseWriter() {
             }
+            BaseWriter.prototype.convertToLength = function (t, l) {
+                if (t.length > l) {
+                    // on doit prendre uniquement les l caractères
+                    return t.substr(0, l);
+                }
+                else if (t.length < l) {
+                    for (var i = t.length; i < l; i++) {
+                        t += ' ';
+                    }
+                    return t;
+                }
+                else {
+                    return t;
+                }
+            };
+            BaseWriter.prototype.convertDate = function (d) {
+                d = new Date(d);
+                var dd = d.getDate().toString();
+                if (dd.length === 1)
+                    dd = '0' + dd;
+                var mm = d.getMonth().toString();
+                if (mm.length === 1)
+                    mm = '0' + mm;
+                var yyyy = d.getFullYear().toString();
+                yyyy = yyyy.substr(2, 2);
+                var res = dd + mm + yyyy;
+                return res;
+            };
+            BaseWriter.prototype.getSens = function (l, o) {
+                var params = o || {};
+                if (l.debit > 0) {
+                    params.sens = 'D';
+                    params.montant = l.debit;
+                }
+                else if (l.credit < 0) {
+                    params.sens = 'D';
+                    params.montant = -1 * l.credit;
+                }
+                else if (l.debit < 0) {
+                    params.sens = 'C';
+                    params.montant = -1 * l.debit;
+                }
+                else {
+                    params.sens = 'C';
+                    params.montant = l.credit;
+                }
+                return params;
+            };
             return BaseWriter;
         }());
+        var WriterSage = (function (_super) {
+            __extends(WriterSage, _super);
+            function WriterSage() {
+                _super.call(this);
+            }
+            WriterSage.prototype.toPNM = function (arg) {
+                var type = arg.constructor.name.toString();
+                switch (type) {
+                    case 'Journal':
+                        return writeJournal(arg);
+                    default:
+                        return null;
+                }
+                function writeJournal(journal) {
+                    var res = '';
+                    res += writeLigneEnteteSociete();
+                    journal.ecritures.forEach(function (e) {
+                        res += writeEcriture(e);
+                    }, this);
+                    function writeLigneEnteteSociete() {
+                        var res = 'entreprise ???\r\n';
+                        return res;
+                    }
+                    function writeEcriture(ecriture) {
+                        var resEcriture = '';
+                        // params nécessaire pour l'écriture d'un ligne type M
+                        var params = {
+                            numeroCompte: null,
+                            journalCode: this.convertToLength(journal.journalCode, 3) || 'VE ',
+                            date: this.convertDate(ecriture.ecritureDate),
+                            libelle: ecriture.ecritureLib,
+                            sens: null,
+                            montant: null,
+                            pieceRef: ecriture.pieceRef
+                        };
+                        ecriture.lignes.forEach(function (l) {
+                            resEcriture += writeLigne(l);
+                        }, this);
+                        return resEcriture;
+                        function writeLigne(ligne) {
+                            function convertToMontantSage(v) {
+                                // mise sur la longeur quadra 12 signes pour le montant
+                                var resValue = v.toString();
+                                if (resValue.length > 20) {
+                                    throw new Error('Valeur trop grande');
+                                }
+                                else if (resValue.length < 20) {
+                                    for (var i = resValue.length; i < 20; i++) {
+                                        resValue = ' ' + resValue;
+                                    }
+                                }
+                                var resLigne = '';
+                                // code jouranl pos 1 long 3
+                                resLigne += params.journalCode;
+                                // date pièce pos 4 long 6 JJMMAA
+                                resLigne += this.convertDate(params.date);
+                                // type de pièce pos 10 long 2
+                                resLigne += this.convertToLength('', 2);
+                                // compte general pos 12 long 13
+                                resLigne += this.convertToLength(ligne.compteNum, 13);
+                                // type de compte pos 25 long
+                                resLigne += this.convertToLength('', 1);
+                                // libelle de l'écriture pos 52 long 25
+                                resLigne += this.convertToLength(params.libelle, 25);
+                                // mode de paiement pos 77 long 1
+                                resLigne += ' ';
+                                // date de l'échéance pos 78 long 6
+                                resLigne += this.convertToLength('', 6);
+                                var paramsMontant = this.getSens(ligne);
+                                // sens pos 84 long 1
+                                resLigne += paramsMontant.sens;
+                                // type écriture pos 105 long 1
+                                resLigne += convertToMontantSage(paramsMontant.montant);
+                                // numero de pièce pos 106 long 7
+                                resLigne += this.convertToLength(params.pieceRef, 7);
+                                resLigne += 'N';
+                                return resLigne;
+                            }
+                        }
+                    }
+                }
+            };
+            return WriterSage;
+        }(BaseWriter));
+        Writers.WriterSage = WriterSage;
         var WriterCSV = (function (_super) {
             __extends(WriterCSV, _super);
             function WriterCSV() {
@@ -253,22 +386,7 @@ var QreaCompta;
                         // on parcours chaque ligne
                         ecriture.lignes.forEach(function (l) {
                             params.numeroCompte = l.compteNum;
-                            if (l.debit > 0) {
-                                params.sens = 'D';
-                                params.montant = l.debit;
-                            }
-                            else if (l.credit < 0) {
-                                params.sens = 'D';
-                                params.montant = -1 * l.credit;
-                            }
-                            else if (l.debit < 0) {
-                                params.sens = 'C';
-                                params.montant = -1 * l.debit;
-                            }
-                            else {
-                                params.sens = 'C';
-                                params.montant = l.credit;
-                            }
+                            params = this.getSens(l, params);
                             res += writeLineM(params);
                             res += '\r\n';
                         }, this);
