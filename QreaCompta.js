@@ -17,6 +17,17 @@ var QreaCompta;
             return BaseModel;
         }());
         ;
+        var Compte = (function (_super) {
+            __extends(Compte, _super);
+            function Compte(params) {
+                // constructor parent
+                _super.call(this, params);
+                this.compteLib = params.compteLib || null;
+                this.compteNum = params.compteNum || null;
+            }
+            return Compte;
+        }(BaseModel));
+        Models.Compte = Compte;
         var Journal = (function (_super) {
             __extends(Journal, _super);
             function Journal(params) {
@@ -190,11 +201,11 @@ var QreaCompta;
                             // ecriture
                             // var resLigne = '%s;compteNum;ecritureLibelle;debit;credit;pieceRef\r\n';
                             var resLigne = params.date + ';';
-                            resLigne = params.numeroCompte + ';';
-                            resLigne = params.libelle + ';';
-                            resLigne = params.debit + ';';
-                            resLigne = params.credit + ';';
-                            resLigne = params.pieceRef + ';';
+                            resLigne += params.numeroCompte + ';';
+                            resLigne += params.libelle + ';';
+                            resLigne += params.debit + ';';
+                            resLigne += params.credit + ';';
+                            resLigne += params.pieceRef + ';';
                             resLigne += '\r\n';
                             return resLigne;
                         }

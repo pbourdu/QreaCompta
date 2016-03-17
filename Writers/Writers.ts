@@ -84,11 +84,11 @@ module QreaCompta {
               // ecriture
               // var resLigne = '%s;compteNum;ecritureLibelle;debit;credit;pieceRef\r\n';
               var resLigne = params.date + ';';
-              resLigne = params.numeroCompte + ';';
-              resLigne = params.libelle + ';';
-              resLigne = params.debit + ';';
-              resLigne = params.credit + ';';
-              resLigne = params.pieceRef + ';';
+              resLigne += params.numeroCompte + ';';
+              resLigne += params.libelle + ';';
+              resLigne += params.debit + ';';
+              resLigne += params.credit + ';';
+              resLigne += params.pieceRef + ';';
               resLigne += '\r\n';
 
               return resLigne;
