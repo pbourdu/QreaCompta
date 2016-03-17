@@ -133,6 +133,84 @@ var QreaCompta;
             }
             return BaseWriter;
         }());
+        var WriterCSV = (function (_super) {
+            __extends(WriterCSV, _super);
+            function WriterCSV() {
+                _super.call(this);
+            }
+            WriterCSV.prototype.toCSV = function (arg) {
+                function writeJournal(journal) {
+                    // ON ECRIT LES ENTETES DU CSV DANS LA PREMIERE LIGNE
+                    var res = 'ecritureDate;compteNum;ecritureLibelle;debit;credit;pieceRef\r\n';
+                    // pour chaque écriture
+                    journal.ecritures.forEach(function (e) {
+                        res += writeEcriture(e);
+                    }, this);
+                    return res;
+                    function writeEcriture(ecriture) {
+                        function convertDate(d) {
+                            d = new Date(d);
+                            var dd = d.getDate().toString();
+                            if (dd.length === 1)
+                                dd = '0' + dd;
+                            var mm = d.getMonth().toString();
+                            if (mm.length === 1)
+                                mm = '0' + mm;
+                            var yyyy = d.getFullYear().toString();
+                            var res = dd + mm + yyyy;
+                            return res;
+                        }
+                        var resEcriture = '';
+                        var params = {
+                            numeroCompte: null,
+                            journalCode: journal.journalCode || 'VE',
+                            date: convertDate(ecriture.ecritureDate),
+                            libelle: ecriture.ecritureLib,
+                            debit: null,
+                            credit: null,
+                            pieceRef: ecriture.pieceRef
+                        };
+                        ecriture.lignes.forEach(function (l) {
+                            resEcriture += writeLigne(l);
+                        }, this);
+                        return resEcriture;
+                        function writeLigne(l) {
+                            function convertMontantToStringCSV(montant) {
+                                if (montant) {
+                                    var res = montant.toString();
+                                    return res.replace(".", ";");
+                                }
+                                else {
+                                    return '0';
+                                }
+                            }
+                            params.numeroCompte = l.compteNum;
+                            params.debit = convertMontantToStringCSV(l.debit),
+                                params.credit = convertMontantToStringCSV(l.credit);
+                            // ecriture
+                            // var resLigne = '%s;compteNum;ecritureLibelle;debit;credit;pieceRef\r\n';
+                            var resLigne = params.date + ';';
+                            resLigne = params.numeroCompte + ';';
+                            resLigne = params.libelle + ';';
+                            resLigne = params.debit + ';';
+                            resLigne = params.credit + ';';
+                            resLigne = params.pieceRef + ';';
+                            resLigne += '\r\n';
+                            return resLigne;
+                        }
+                    }
+                }
+                var type = arg.constructor.name.toString();
+                switch (type) {
+                    case 'Journal':
+                        return writeJournal(arg);
+                    default:
+                        return null;
+                }
+            };
+            return WriterCSV;
+        }(BaseWriter));
+        Writers.WriterCSV = WriterCSV;
         var WriterQuadra = (function (_super) {
             __extends(WriterQuadra, _super);
             function WriterQuadra() {
