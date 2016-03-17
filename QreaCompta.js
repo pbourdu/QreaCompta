@@ -168,7 +168,7 @@ var QreaCompta;
                             if (mm.length === 1)
                                 mm = '0' + mm;
                             var yyyy = d.getFullYear().toString();
-                            var res = dd + mm + yyyy;
+                            var res = dd + '/' + mm + '/' + yyyy;
                             return res;
                         }
                         var resEcriture = '';
@@ -189,7 +189,7 @@ var QreaCompta;
                             function convertMontantToStringCSV(montant) {
                                 if (montant) {
                                     var res = montant.toString();
-                                    return res.replace(".", ";");
+                                    return res.replace(".", ",");
                                 }
                                 else {
                                     return '0';
