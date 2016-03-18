@@ -220,8 +220,8 @@ var QreaCompta;
                         // params nécessaire pour l'écriture d'un ligne type M
                         var params = {
                             numeroCompte: null,
-                            journalCode: this.convertToLength(journal.journalCode, 3) || 'VE ',
-                            date: this.convertDate(ecriture.ecritureDate),
+                            journalCode: _super.convertToLength.call(this, journal.journalCode, 3) || 'VE ',
+                            date: _super.convertDate.call(this, ecriture.ecritureDate),
                             libelle: ecriture.ecritureLib,
                             sens: null,
                             montant: null,
@@ -247,26 +247,26 @@ var QreaCompta;
                                 // code jouranl pos 1 long 3
                                 resLigne += params.journalCode;
                                 // date pièce pos 4 long 6 JJMMAA
-                                resLigne += this.convertDate(params.date);
+                                resLigne += _super.convertDate.call(this, params.date);
                                 // type de pièce pos 10 long 2
-                                resLigne += this.convertToLength('', 2);
+                                resLigne += _super.convertToLength.call(this, '', 2);
                                 // compte general pos 12 long 13
-                                resLigne += this.convertToLength(ligne.compteNum, 13);
+                                resLigne += _super.convertToLength.call(this, ligne.compteNum, 13);
                                 // type de compte pos 25 long
-                                resLigne += this.convertToLength('', 1);
+                                resLigne += _super.convertToLength.call(this, '', 1);
                                 // libelle de l'écriture pos 52 long 25
-                                resLigne += this.convertToLength(params.libelle, 25);
+                                resLigne += _super.convertToLength.call(this, params.libelle, 25);
                                 // mode de paiement pos 77 long 1
                                 resLigne += ' ';
                                 // date de l'échéance pos 78 long 6
-                                resLigne += this.convertToLength('', 6);
-                                var paramsMontant = this.getSens(ligne);
+                                resLigne += _super.convertToLength.call(this, '', 6);
+                                var paramsMontant = _super.getSens.call(this, ligne);
                                 // sens pos 84 long 1
                                 resLigne += paramsMontant.sens;
                                 // type écriture pos 105 long 1
                                 resLigne += convertToMontantSage(paramsMontant.montant);
                                 // numero de pièce pos 106 long 7
-                                resLigne += this.convertToLength(params.pieceRef, 7);
+                                resLigne += _super.convertToLength.call(this, params.pieceRef, 7);
                                 resLigne += 'N';
                                 return resLigne;
                             }
@@ -386,7 +386,7 @@ var QreaCompta;
                         // on parcours chaque ligne
                         ecriture.lignes.forEach(function (l) {
                             params.numeroCompte = l.compteNum;
-                            params = this.getSens(l, params);
+                            params = _super.getSens.call(this, l, params);
                             res += writeLineM(params);
                             res += '\r\n';
                         }, this);
