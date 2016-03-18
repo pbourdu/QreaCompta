@@ -116,7 +116,7 @@ module QreaCompta {
             ecriture.lignes.forEach(function(l, index, array) {
               
               resEcriture += writeLigne(l);
-              if(index !== array.length - 1) resEcriture += '\r\n';
+              resEcriture += '\r\n';
 
             }, this);
 
