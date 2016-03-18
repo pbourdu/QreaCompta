@@ -134,8 +134,9 @@ module QreaCompta {
 
                   for (var i = resValue.length; i < 20; i++) {
                     resValue = ' ' + resValue;
-
                   }
+                  
+                  return resValue;
 
                 }
 
