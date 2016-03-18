@@ -9,7 +9,7 @@ module QreaCompta {
 
       constructor() { }
 
-      protected convertToLength(t: string, l: number) {
+      static convertToLength(t: string, l: number) {
 
         if (t.length > l) {
           // on doit prendre uniquement les l caractères
@@ -25,7 +25,7 @@ module QreaCompta {
 
       }
 
-      protected convertDate(d) {
+      static convertDate(d) {
 
         d = new Date(d);
 
@@ -41,9 +41,7 @@ module QreaCompta {
 
       }
 
-      protected getSens(l: QreaCompta.Models.Ligne, o: any) {
-
-        var params = o || {};
+      static getSens(l: QreaCompta.Models.Ligne, params: any = {}) {
 
         if (l.debit > 0) {
           params.sens = 'D';
@@ -105,8 +103,8 @@ module QreaCompta {
             // params nécessaire pour l'écriture d'un ligne type M
             var params = {
               numeroCompte: null,
-              journalCode: super.convertToLength(journal.journalCode, 3) || 'VE ',
-              date: super.convertDate(ecriture.ecritureDate),
+              journalCode: BaseWriter.convertToLength(journal.journalCode, 3) || 'VE ',
+              date: BaseWriter.convertDate(ecriture.ecritureDate),
               libelle: ecriture.ecritureLib,
               sens: null,
               montant: null,
@@ -143,21 +141,21 @@ module QreaCompta {
                 // code jouranl pos 1 long 3
                 resLigne += params.journalCode;
                 // date pièce pos 4 long 6 JJMMAA
-                resLigne += super.convertDate(params.date);
+                resLigne += BaseWriter.convertDate(params.date);
                 // type de pièce pos 10 long 2
-                resLigne += super.convertToLength('', 2);
+                resLigne += BaseWriter.convertToLength('', 2);
                 // compte general pos 12 long 13
-                resLigne += super.convertToLength(ligne.compteNum, 13);
+                resLigne += BaseWriter.convertToLength(ligne.compteNum, 13);
                 // type de compte pos 25 long
-                resLigne += super.convertToLength('', 1);
+                resLigne += BaseWriter.convertToLength('', 1);
                 // libelle de l'écriture pos 52 long 25
-                resLigne += super.convertToLength(params.libelle, 25);
+                resLigne += BaseWriter.convertToLength(params.libelle, 25);
                 // mode de paiement pos 77 long 1
                 resLigne += ' ';
                 // date de l'échéance pos 78 long 6
-                resLigne += super.convertToLength('', 6);
+                resLigne += BaseWriter.convertToLength('', 6);
 
-                var paramsMontant = super.getSens(ligne);
+                var paramsMontant = BaseWriter.getSens(ligne);
 
                 // sens pos 84 long 1
                 resLigne += paramsMontant.sens;
@@ -165,7 +163,7 @@ module QreaCompta {
                 resLigne += convertToMontantSage(paramsMontant.montant);
 
                 // numero de pièce pos 106 long 7
-                resLigne += super.convertToLength(params.pieceRef, 7);
+                resLigne += BaseWriter.convertToLength(params.pieceRef, 7);
 
                 resLigne += 'N';
 
@@ -327,7 +325,7 @@ module QreaCompta {
 
               params.numeroCompte = l.compteNum;
 
-              params = super.getSens(l, params);
+              params = BaseWriter.getSens(l, params);
 
               res += writeLineM(params);
               res += '\r\n';
