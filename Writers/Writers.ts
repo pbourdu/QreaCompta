@@ -113,8 +113,11 @@ module QreaCompta {
               pieceRef: ecriture.pieceRef
             }
 
-            ecriture.lignes.forEach(function(l) {
+            ecriture.lignes.forEach(function(l, index, array) {
+              
               resEcriture += writeLigne(l);
+              if(index !== array.length - 1) resEcriture += '\r\n';
+
             }, this);
 
             return resEcriture;
@@ -135,7 +138,7 @@ module QreaCompta {
                   for (var i = resValue.length; i < 20; i++) {
                     resValue = ' ' + resValue;
                   }
-                  
+
                   return resValue;
 
                 }

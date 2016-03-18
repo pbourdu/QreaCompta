@@ -228,8 +228,10 @@ var QreaCompta;
                             montant: null,
                             pieceRef: ecriture.pieceRef
                         };
-                        ecriture.lignes.forEach(function (l) {
+                        ecriture.lignes.forEach(function (l, index, array) {
                             resEcriture += writeLigne(l);
+                            if (index !== array.length - 1)
+                                resEcriture += '\r\n';
                         }, this);
                         return resEcriture;
                         function writeLigne(ligne) {
