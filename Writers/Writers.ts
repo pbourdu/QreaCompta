@@ -89,6 +89,8 @@ module QreaCompta {
             res += writeEcriture(e);
           }, this);
 
+          return res;
+
           function writeLigneEnteteSociete() {
 
             var res = 'entreprise ???\r\n';
@@ -137,39 +139,39 @@ module QreaCompta {
 
                 }
 
-                var resLigne = '';
-                // code jouranl pos 1 long 3
-                resLigne += params.journalCode;
-                // date pièce pos 4 long 6 JJMMAA
-                resLigne += BaseWriter.convertDate(params.date);
-                // type de pièce pos 10 long 2
-                resLigne += BaseWriter.convertToLength('', 2);
-                // compte general pos 12 long 13
-                resLigne += BaseWriter.convertToLength(ligne.compteNum, 13);
-                // type de compte pos 25 long
-                resLigne += BaseWriter.convertToLength('', 1);
-                // libelle de l'écriture pos 52 long 25
-                resLigne += BaseWriter.convertToLength(params.libelle, 25);
-                // mode de paiement pos 77 long 1
-                resLigne += ' ';
-                // date de l'échéance pos 78 long 6
-                resLigne += BaseWriter.convertToLength('', 6);
-
-                var paramsMontant = BaseWriter.getSens(ligne);
-
-                // sens pos 84 long 1
-                resLigne += paramsMontant.sens;
-                // type écriture pos 105 long 1
-                resLigne += convertToMontantSage(paramsMontant.montant);
-
-                // numero de pièce pos 106 long 7
-                resLigne += BaseWriter.convertToLength(params.pieceRef, 7);
-
-                resLigne += 'N';
-
-                return resLigne;
-
               }
+
+              var resLigne = '';
+              // code jouranl pos 1 long 3
+              resLigne += params.journalCode;
+              // date pièce pos 4 long 6 JJMMAA
+              resLigne += BaseWriter.convertDate(params.date);
+              // type de pièce pos 10 long 2
+              resLigne += BaseWriter.convertToLength('', 2);
+              // compte general pos 12 long 13
+              resLigne += BaseWriter.convertToLength(ligne.compteNum, 13);
+              // type de compte pos 25 long
+              resLigne += BaseWriter.convertToLength('', 1);
+              // libelle de l'écriture pos 52 long 25
+              resLigne += BaseWriter.convertToLength(params.libelle, 25);
+              // mode de paiement pos 77 long 1
+              resLigne += ' ';
+              // date de l'échéance pos 78 long 6
+              resLigne += BaseWriter.convertToLength('', 6);
+
+              var paramsMontant = BaseWriter.getSens(ligne);
+
+              // sens pos 84 long 1
+              resLigne += paramsMontant.sens;
+              // type écriture pos 105 long 1
+              resLigne += convertToMontantSage(paramsMontant.montant);
+
+              // numero de pièce pos 106 long 7
+              resLigne += BaseWriter.convertToLength(params.pieceRef, 7);
+
+              resLigne += 'N';
+
+              return resLigne;
 
             }
 
