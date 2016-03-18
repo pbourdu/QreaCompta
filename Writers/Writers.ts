@@ -9,6 +9,14 @@ module QreaCompta {
 
       constructor() { }
 
+      /**
+       * convertToLength - Convertir la chaine de caractère à
+       * la longueur désirée
+       *
+       * @param  {string} t: string texte en entrée
+       * @param  {number} l: number longueur désirée
+       * @return {string}           texte à la longueur désirée
+       */
       static convertToLength(t: string, l: number) {
 
         if (t.length > l) {
@@ -25,6 +33,12 @@ module QreaCompta {
 
       }
 
+      /**
+       * convertDate - Convertir la date au format requis par quadra DDMMYY
+       *
+       * @param  {date} d la date à convertir
+       * @return {string}   la date au format DDMMYY
+       */
       static convertDate(d) {
 
         d = new Date(d);
@@ -149,7 +163,7 @@ module QreaCompta {
               // code jouranl pos 1 long 3
               resLigne += params.journalCode;
               // date pièce pos 4 long 6 JJMMAA
-              resLigne += BaseWriter.convertDate(params.date);
+              resLigne += params.date;
               // type de pièce pos 10 long 2
               resLigne += BaseWriter.convertToLength('', 2);
               // compte general pos 12 long 13
@@ -362,52 +376,6 @@ module QreaCompta {
                 }
 
               }
-
-
-              /**
-               * convertDate - Convertir la date au format requis par quadra DDMMYY
-               *
-               * @param  {date} d la date à convertir
-               * @return {string}   la date au format DDMMYY
-               */
-              function convertDate(d) {
-
-                d = new Date(d);
-
-                var dd = d.getDate().toString();
-                if (dd.length === 1) dd = '0' + dd;
-                var mm = d.getMonth().toString();
-                if (mm.length === 1) mm = '0' + mm;
-                var yyyy = d.getFullYear().toString();
-                yyyy = yyyy.substr(2, 2);
-
-                var res = dd + mm + yyyy;
-                return res;
-
-              }
-
-              /**
-               * convertToLength - Convertir la chaine de caractère à
-               * la longueur désirée
-               *
-               * @param  {string} t: string texte en entrée
-               * @param  {number} l: number longueur désirée
-               * @return {string}           texte à la longueur désirée
-               */
-              function convertToLength(t: string, l: number) {
-                if (t.length > l) {
-                  // on doit prendre uniquement les l caractères
-                  return t.substr(0, l);
-                } else if (t.length < l) {
-                  for (var i = t.length; i < l; i++) {
-                    t += ' ';
-                  }
-                  return t;
-                } else {
-                  return t;
-                }
-              }
-
 
               /**
                * convertToCentimesSigne - Convertir un montant en centimes signé
