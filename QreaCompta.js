@@ -162,7 +162,7 @@ var QreaCompta;
                 var dd = d.getDate().toString();
                 if (dd.length === 1)
                     dd = '0' + dd;
-                var mm = d.getMonth().toString();
+                var mm = (d.getMonth() + 1).toString();
                 if (mm.length === 1)
                     mm = '0' + mm;
                 var yyyy = d.getFullYear().toString();
@@ -496,49 +496,49 @@ var QreaCompta;
                             // * * N° folio (à initialiser à "000" si pas de folio) 12 3
                             res += '000';
                             // * * Date écriture (JJMMAA) 15 6
-                            res += convertDate(params.date);
+                            res += BaseWriter.convertDate(params.date);
                             // *  Code libellé 21 1
                             res += ' ';
                             // * Libellé libre 22 20
-                            res += convertToLength(params.libelle, 20);
+                            res += BaseWriter.convertToLength(params.libelle, 20);
                             // * * Sens Débit/Crédit (D/C) 42 1
                             res += params.sens;
                             // * * Montant en centimes signé (position 43=signe) 43 13
                             res += convertToCentimesSigne(params.montant);
                             // * Compte de contrepartie 56 8
-                            res += convertToLength(' ', 8);
+                            res += BaseWriter.convertToLength(' ', 8);
                             // *  Date échéance (JJMMAA) 64 6
-                            res += convertToLength(' ', 6);
+                            res += BaseWriter.convertToLength(' ', 6);
                             // * Code lettrage 70 2
-                            res += convertToLength(' ', 2);
+                            res += BaseWriter.convertToLength(' ', 2);
                             // *  Code statistiques 72 3
-                            res += convertToLength(' ', 3);
+                            res += BaseWriter.convertToLength(' ', 3);
                             // *  N° de pièce sur 5 caractères maximum 75 5
-                            res += convertToLength(params.pieceRef, 5);
+                            res += BaseWriter.convertToLength(params.pieceRef, 5);
                             // * Code affaire 80 10
-                            res += convertToLength(' ', 10);
+                            res += BaseWriter.convertToLength(' ', 10);
                             // *  Quantité 1 90 10
-                            res += convertToLength(' ', 10);
+                            res += BaseWriter.convertToLength(' ', 10);
                             // * Numéro de pièce jusqu'à 8 caractères 100 8
-                            res += convertToLength(' ', 8);
+                            res += BaseWriter.convertToLength(' ', 8);
                             // * Code devise (FRF ou EUR, Espace = FRF, ou Devise) 108 3
-                            res += convertToLength(' ', 3);
+                            res += BaseWriter.convertToLength(' ', 3);
                             // * QC Windows seulement
                             // * * Code journal sur 3 caractères 111 3
-                            res += convertToLength(' ', 3);
+                            res += BaseWriter.convertToLength(' ', 3);
                             // * Flag Code TVA géré dans l'écriture = O (oui) 114 1
-                            res += convertToLength(' ', 1);
+                            res += BaseWriter.convertToLength(' ', 1);
                             // * Code TVA   = 0 à 9 115 1
-                            res += convertToLength(' ', 1);
+                            res += BaseWriter.convertToLength(' ', 1);
                             // * Méthode de calcul TVA  = D (Débits) ou E (Encaissements) 116 1
-                            res += convertToLength(' ', 1);
+                            res += BaseWriter.convertToLength(' ', 1);
                             // QC Windows seulement
                             // Libellé écriture sur 30 caract. (blanc si renseigné en 22 sur 20 caract.) 117 30
-                            res += convertToLength(params.libelle, 30);
+                            res += BaseWriter.convertToLength(params.libelle, 30);
                             // Code TVA sur 2 caractères 147 2
-                            res += convertToLength(' ', 2);
+                            res += BaseWriter.convertToLength(' ', 2);
                             // N° de pièce alphanumérique sur 10 caract. 149 10
-                            res += convertToLength(params.pieceRef, 10);
+                            res += BaseWriter.convertToLength(params.pieceRef, 10);
                             // Réservé 159 10
                             // QC Windows seulement
                             // Montant dans la devise (en centimes signés position 169=signe) 169 13
