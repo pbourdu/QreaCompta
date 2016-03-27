@@ -13,9 +13,33 @@ module QreaCompta {
       }
     };
 
+    export class Entreprise extends BaseModel {
+
+      constructor(params: any) {
+        super(params);
+        this.denomination = params.denomination || "Mon entreprise";
+      }
+
+      denomination: string;
+
+    }
+
+    export class Comptabilite extends BaseModel {
+
+      constructor(params: any) {
+        super(params);
+        this.entreprise = params.entreprise || null;
+        this.exercices = params.exercices || null;
+      }
+
+      entreprise: Entreprise;
+      exercices: Exercice[];
+
+    }
+
     export class Exercice extends BaseModel {
 
-      constructor(params: any){
+      constructor(params: any) {
         super(params);
         this.dateCloture = params.dateCloture || null;
         this.duree = params.duree || 12; // par défaut exercice de 12 mois
@@ -35,7 +59,7 @@ module QreaCompta {
 
     export class Compte extends BaseModel {
 
-      constructor(params: any){
+      constructor(params: any) {
 
         // constructor parent
         super(params);
@@ -66,25 +90,25 @@ module QreaCompta {
 
       }
 
-      public addEcriture(e: Ecriture){
-        if(!e.equilibre){
+      public addEcriture(e: Ecriture) {
+        if (!e.equilibre) {
           throw new Error('L\'écriture n\'est pas équilibrée');
         } else {
           this.ecritures.push(e);
         }
       }
 
-      private checkEquilibre(){
+      private checkEquilibre() {
 
-        if(!this.ecritures || this.ecritures.length === 0){
+        if (!this.ecritures || this.ecritures.length === 0) {
           return true;
-        } else if(this.ecritures.length === 1) {
+        } else if (this.ecritures.length === 1) {
           return false;
         } else {
 
           var test = true;
-          this.ecritures.forEach(function(e: Ecriture){
-            if(!e.equilibre) test = false;
+          this.ecritures.forEach(function(e: Ecriture) {
+            if (!e.equilibre) test = false;
           });
 
           return test;
@@ -93,7 +117,7 @@ module QreaCompta {
 
       }
 
-      get equilibre(): boolean{
+      get equilibre(): boolean {
         return this.checkEquilibre();
       }
 
@@ -121,20 +145,20 @@ module QreaCompta {
 
       }
 
-      public addLigne(l: Ligne){
+      public addLigne(l: Ligne) {
         this.lignes.push(l);
       }
 
-      private checkEquilibre(){
+      private checkEquilibre() {
 
-        if(this.lignes.length < 1){
+        if (this.lignes.length < 1) {
           return true;
-        } else if(this.lignes.length === 1){
+        } else if (this.lignes.length === 1) {
           return false;
         } else {
           var totalDebit = 0;
           var totalCredit = 0;
-          this.lignes.forEach(function(l: Ligne){
+          this.lignes.forEach(function(l: Ligne) {
             totalDebit += l.debit;
             totalCredit += l.credit;
           }, this);
@@ -159,9 +183,9 @@ module QreaCompta {
 
     };
 
-    export class Ligne extends BaseModel{
+    export class Ligne extends BaseModel {
 
-      constructor(params: any){
+      constructor(params: any) {
 
         super(params);
         this.compteLib = params.compteLib || null;

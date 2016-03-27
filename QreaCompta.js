@@ -17,6 +17,25 @@ var QreaCompta;
             return BaseModel;
         }());
         ;
+        var Entreprise = (function (_super) {
+            __extends(Entreprise, _super);
+            function Entreprise(params) {
+                _super.call(this, params);
+                this.denomination = params.denomination || "Mon entreprise";
+            }
+            return Entreprise;
+        }(BaseModel));
+        Models.Entreprise = Entreprise;
+        var Comptabilite = (function (_super) {
+            __extends(Comptabilite, _super);
+            function Comptabilite(params) {
+                _super.call(this, params);
+                this.entreprise = params.entreprise || null;
+                this.exercices = params.exercices || null;
+            }
+            return Comptabilite;
+        }(BaseModel));
+        Models.Comptabilite = Comptabilite;
         var Exercice = (function (_super) {
             __extends(Exercice, _super);
             function Exercice(params) {
