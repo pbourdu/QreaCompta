@@ -17,6 +17,17 @@ var QreaCompta;
             return BaseModel;
         }());
         ;
+        var Exercice = (function (_super) {
+            __extends(Exercice, _super);
+            function Exercice(params) {
+                _super.call(this, params);
+                this.dateCloture = params.dateCloture || null;
+                this.duree = params.duree || 12; // par défaut exercice de 12 mois
+                this.journaux = params.journaux || [];
+            }
+            return Exercice;
+        }(BaseModel));
+        Models.Exercice = Exercice;
         var Compte = (function (_super) {
             __extends(Compte, _super);
             function Compte(params) {

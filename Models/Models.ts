@@ -13,25 +13,45 @@ module QreaCompta {
       }
     };
 
-    export class Compte extends BaseModel {
-      
+    export class Exercice extends BaseModel {
+
       constructor(params: any){
-        
+        super(params);
+        this.dateCloture = params.dateCloture || null;
+        this.duree = params.duree || 12; // par défaut exercice de 12 mois
+        this.journaux = params.journaux || [];
+      }
+
+      // la date de cloture
+      dateCloture: Date;
+
+      // durée de l'Exercice
+      duree: number;
+
+      // les journaux
+      journaux: Journal[];
+
+    }
+
+    export class Compte extends BaseModel {
+
+      constructor(params: any){
+
         // constructor parent
         super(params);
         this.compteLib = params.compteLib || null;
         this.compteNum = params.compteNum || null;
-          
+
       }
-      
+
       // le libellé du compte
       compteLib: string;
-      
+
       // c'est l'identifiant unique du compte
       compteNum: string;
-      
+
     }
-    
+
     export class Journal extends BaseModel {
 
       constructor(params: any) {
