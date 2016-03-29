@@ -221,27 +221,12 @@ module QreaCompta {
 
           function writeEcriture(ecriture: QreaCompta.Models.Ecriture) {
 
-            function convertDate(d) {
-
-              d = new Date(d);
-
-              var dd = d.getDate().toString();
-              if (dd.length === 1) dd = '0' + dd;
-              var mm = d.getMonth().toString();
-              if (mm.length === 1) mm = '0' + mm;
-              var yyyy = d.getFullYear().toString();
-
-              var res = dd + '/' + mm + '/' + yyyy;
-              return res;
-
-            }
-
             var resEcriture = '';
 
             var params = {
               numeroCompte: null,
               journalCode: journal.journalCode || 'VE',
-              date: convertDate(ecriture.ecritureDate),
+              date: BaseWriter.convertDate(ecriture.ecritureDate),
               libelle: ecriture.ecritureLib,
               debit: null,
               credit: null,
