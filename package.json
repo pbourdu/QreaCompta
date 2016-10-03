@@ -1,0 +1,23 @@
+{
+  "name": "qrea-compta",
+  "version": "0.0.1",
+  "description": "Modelisation de comptabilité",
+  "main": "QreaCompta.js",
+  "scripts": {
+    "test": "tsc && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pbourdu/qrea-compta.git"
+  },
+  "author": "Pierre BOURDU",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pbourdu/qrea-compta/issues"
+  },
+  "homepage": "https://github.com/pbourdu/qrea-compta#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.0"
+  }
+}

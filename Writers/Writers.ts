@@ -83,9 +83,9 @@ module QreaCompta {
         super();
       }
 
-      public toPNM<T>(arg: T): T {
+      public toPNM(arg: any) {
 
-        var type = arg.constructor.name.toString();
+        var type = (<any>arg).constructor.name.toString();
 
         switch (type) {
           case 'Journal':
@@ -94,7 +94,9 @@ module QreaCompta {
             return null;
         }
 
-        function writeJournal(journal: QreaCompta.Models.Journal) {
+        function writeJournal(_journal:any) {
+
+          var journal = <QreaCompta.Models.Journal>_journal;
 
           var res = '';
           res += writeLigneEnteteSociete();
@@ -205,9 +207,11 @@ module QreaCompta {
         super();
       }
 
-      public toCSV<T>(arg: T): T {
+      public toCSV(arg: any) {
 
-        function writeJournal(journal: QreaCompta.Models.Journal) {
+        function writeJournal(_journal: any) {
+
+          var journal = <QreaCompta.Models.Journal>_journal;
 
           // ON ECRIT LES ENTETES DU CSV DANS LA PREMIERE LIGNE
           var res = 'ecritureDate;compteNum;ecritureLibelle;debit;credit;pieceRef\r\n';
@@ -274,7 +278,7 @@ module QreaCompta {
 
         }
 
-        var type = arg.constructor.name.toString();
+        var type = (<any>arg).constructor.name.toString();
 
         switch (type) {
           case 'Journal':
@@ -293,9 +297,11 @@ module QreaCompta {
         super();
       }
 
-      public toASCII<T>(arg: T): T {
+      public toASCII(arg: any) {
 
-        function writeJournal(journal: QreaCompta.Models.Journal) {
+        function writeJournal(_journal: any) {
+
+          var journal = <QreaCompta.Models.Journal>_journal;
 
           var file = '';
 
@@ -478,7 +484,7 @@ module QreaCompta {
 
         }
 
-        var type = arg.constructor.name.toString();
+        var type = (<any>arg).constructor.name.toString();;
 
         switch (type) {
           case 'Journal':

@@ -15,7 +15,15 @@ module QreaCompta {
 
     export class Entreprise extends BaseModel {
 
-      constructor(params: any) {
+      constructor(
+        params: {
+          denomination: string 
+        }
+        = 
+        {
+          denomination: 'Mon entreprise'
+        })
+      {
         super(params);
         this.denomination = params.denomination || "Mon entreprise";
       }

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
         "out": "QreaCompta.js",
-        "target": "ES5"
+        "target": "ES5" // compilation en en ES5 pour être compatible avec la majorité des navigateurs
     }
 }

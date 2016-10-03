@@ -20,6 +20,9 @@ var QreaCompta;
         var Entreprise = (function (_super) {
             __extends(Entreprise, _super);
             function Entreprise(params) {
+                if (params === void 0) { params = {
+                    denomination: 'Mon entreprise'
+                }; }
                 _super.call(this, params);
                 this.denomination = params.denomination || "Mon entreprise";
             }
@@ -249,7 +252,8 @@ var QreaCompta;
                     default:
                         return null;
                 }
-                function writeJournal(journal) {
+                function writeJournal(_journal) {
+                    var journal = _journal;
                     var res = '';
                     res += writeLigneEnteteSociete();
                     journal.ecritures.forEach(function (e) {
@@ -330,7 +334,8 @@ var QreaCompta;
                 _super.call(this);
             }
             WriterCSV.prototype.toCSV = function (arg) {
-                function writeJournal(journal) {
+                function writeJournal(_journal) {
+                    var journal = _journal;
                     // ON ECRIT LES ENTETES DU CSV DANS LA PREMIERE LIGNE
                     var res = 'ecritureDate;compteNum;ecritureLibelle;debit;credit;pieceRef\r\n';
                     // pour chaque écriture
@@ -396,7 +401,8 @@ var QreaCompta;
                 _super.call(this);
             }
             WriterQuadra.prototype.toASCII = function (arg) {
-                function writeJournal(journal) {
+                function writeJournal(_journal) {
+                    var journal = _journal;
                     var file = '';
                     journal.ecritures.forEach(function (e) {
                         file += writeEcriture(e);
@@ -545,6 +551,7 @@ var QreaCompta;
                     }
                 }
                 var type = arg.constructor.name.toString();
+                ;
                 switch (type) {
                     case 'Journal':
                         return writeJournal(arg);
@@ -559,3 +566,5 @@ var QreaCompta;
 })(QreaCompta || (QreaCompta = {}));
 /// <reference path="Models\Models.ts" />
 /// <reference path="Writers\Writers.ts" />
+var module = module;
+module ? module.exports = QreaCompta : null;
