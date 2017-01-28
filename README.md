@@ -4,4 +4,4 @@ QreaCompta est une librairie javascript open source qui vous permet de :
   - tester une comptabilité à partir d'un Fichier des Ecritures Comptables ;
   - exporter un comptabilité vers les logiciels comptables les plus répandus.
 
-Ecrite en TypeScript, QreaCompta est utilisable en front et en back.
+Ecrite en TypeScript.
